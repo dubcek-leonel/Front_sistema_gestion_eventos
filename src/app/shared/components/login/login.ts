@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   imports: [FormsModule, CommonModule],
@@ -15,29 +16,41 @@ export class Login implements OnInit {
   error: string = '';
   loading: boolean = false;
 
-  //constructor(private router: Router) {}
+  router = inject(Router);
   http = inject(HttpClient);
 
-  usuarios: any[] = [];
+  usuariosSpring: any[] = [];
+
+  // 🔹 Usuarios por defecto
+  usuariosPrecargados = [
+    { email: 'admin@upeu.edu.pe', password: 'admin123', rol: 'ADMIN' },
+    { email: 'admin', password: '123', rol: 'ADMIN' },
+    { email: 'coordinador@upeu.edu.pe', password: 'coord123', rol: 'COORDINADOR' },
+    { email: '2020001@upeu.edu.pe', password: 'student123', rol: 'ESTUDIANTE' },
+  ];
 
   ngOnInit() {
-    this.getUsuarios();
+    console.log('Usuarios precargados:', this.usuariosPrecargados);
+    this.getUsuarios(); // Cargar usuarios del backend al iniciar
   }
 
   getUsuarios() {
-    this.http.get('http://localhost:8080/api/users').subscribe((data: any) => {
-      this.usuarios = data;
-      console.log(this.usuarios);
+    this.http.get('http://localhost:8080/usuarios').subscribe({
+      next: (data: any) => {
+        this.usuariosSpring = data;
+        console.log('Usuarios del servidor:', data);
+      },
+      error: (error) => {
+        console.error('Error al obtener usuarios del servidor:', error);
+      },
     });
   }
 
-  router = inject(Router);
   async onSubmit(event: Event) {
     event.preventDefault();
     this.error = '';
     this.loading = true;
 
-    // Simular autenticación - reemplaza con tu servicio real
     const success = await this.login(this.email, this.password);
 
     if (!success) {
@@ -48,17 +61,28 @@ export class Login implements OnInit {
   }
 
   private async login(email: string, password: string): Promise<boolean> {
-    // Simular llamada a API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Lógica de autenticación - reemplaza con tu implementación real
-    const validCredentials = [
-      { email: 'admin@upeu.edu.pe', password: 'admin123' },
-      { email: 'coordinador@upeu.edu.pe', password: 'coord123' },
-      { email: '2020001@upeu.edu.pe', password: 'student123' },
-    ];
+    // 🔹 Primero buscar en usuarios precargados
+    let user = this.usuariosPrecargados.find((u) => u.email === email && u.password === password);
 
-    return validCredentials.some((cred) => cred.email === email && cred.password === password);
+    // 🔹 Si no se encuentra en precargados, buscar en usuarios del backend
+    if (!user && this.usuariosSpring.length > 0) {
+      user = this.usuariosSpring.find(
+        (u) => u.email === email && u.codigoEstudiante.toString() === password
+      );
+    }
+
+    if (user) {
+      // 🔹 Guardar en localStorage
+      localStorage.setItem('usuario', JSON.stringify(user));
+
+      // 🔹 Redirigir al dashboard
+      this.router.navigate(['/home']);
+      return true;
+    }
+
+    return false;
   }
 
   fillCredentials(role: 'admin' | 'coordinator' | 'student') {
