@@ -1,0 +1,58 @@
+<div *ngIf="event" class="w-full rounded-lg border border-gray-200 shadow-md bg-white transition-shadow duration-300 hover:shadow-xl">
+
+  <div class="relative">
+    <img class="rounded-t-lg w-full h-48 object-cover" [src]="event.imageUrl" [alt]="event.title" />
+
+    <span class="absolute top-3 left-3 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded">
+      {{ event.category }}
+    </span>
+
+    <span class="absolute top-3 right-3 text-sm font-bold px-3 py-1 rounded-full"
+          [ngClass]="event.price === 'Gratis' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+      {{ event.price }}
+    </span>
+  </div>
+
+  <div class="p-5">
+    <h3 class="text-xl font-bold tracking-tight text-gray-900 mb-2">
+      {{ event.title }}
+    </h3>
+
+    <p class="mb-4 font-normal text-gray-600 text-sm line-clamp-2">
+      {{ event.description }}
+    </p>
+
+    <ul class="space-y-2.5 text-gray-700 text-sm mb-4">
+      <li class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <span>{{ event.date }} &middot; {{ event.time }}</span>
+      </li>
+      <li class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        <span>{{ event.location }}</span>
+      </li>
+      <li class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0v-4m0 4h5m0 0v-4m0 4h5m0 0v-4"></path></svg>
+        <span>{{ event.organizer }}</span>
+      </li>
+    </ul>
+
+    <div class="mb-4">
+      <div class="flex justify-between text-sm font-medium text-gray-600 mb-1">
+        <span>Capacidad</span>
+        <span>{{ event.capacity }}</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-blue-600 h-2 rounded-full" [style.width]="getCapacityPercentage()"></div>
+      </div>
+    </div>
+
+    <div *ngIf="event.paymentMethods.length > 0" class="mb-4">
+      <p class="text-xs text-gray-500">Pago: {{ event.paymentMethods.join(', ') }}</p>
+    </div>
+
+    <button class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+      Inscribirse
+    </button>
+  </div>
+</div>

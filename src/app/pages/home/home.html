@@ -1,0 +1,61 @@
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <section class="text-center mb-8">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-2">Eventos Académicos y Culturales</h2>
+    <p class="text-lg text-gray-600">Descubre y participa en los eventos de nuestra universidad</p>
+    <div class="flex justify-center gap-4 mt-4 text-sm text-gray-500">
+      <span>Eventos Gratuitos</span>
+      <span>Eventos de Pago</span>
+    </div>
+  </section>
+
+  <section class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+    <div class="relative w-full sm:flex-1">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <input
+        type="text"
+        placeholder="Buscar eventos..."
+        class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      >
+    </div>
+
+    <select class="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white min-w-[200px] focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="all">Todos los eventos</option>
+    </select>
+  </section>
+
+  <section class="mb-8">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex gap-6">
+        <button class="px-1 py-4 border-b-2 border-blue-600 font-semibold text-blue-600 focus:outline-none">
+          Próximos Eventos
+        </button>
+        <button class="px-1 py-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none">
+          Todos
+        </button>
+      </nav>
+    </div>
+  </section>
+
+  <section class="event-grid">
+
+    <div *ngIf="events.length > 0; else noEvents"
+         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <app-card-evento *ngFor="let evento of events" [event]="evento"></app-card-evento>
+
+    </div>
+
+    <ng-template #noEvents>
+      <div class="text-center p-12 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+        <p class="text-lg text-gray-600">No hay eventos disponibles para mostrar en este momento.</p>
+      </div>
+    </ng-template>
+
+  </section>
+
+</div>
