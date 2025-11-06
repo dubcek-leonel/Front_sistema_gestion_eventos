@@ -1,19 +1,36 @@
-import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
   email: string = '';
   password: string = '';
   error: string = '';
   loading: boolean = false;
 
   //constructor(private router: Router) {}
+  http = inject(HttpClient);
+
+  usuarios: any[] = [];
+
+  ngOnInit() {
+    this.getUsuarios();
+  }
+
+  getUsuarios() {
+    this.http.get('http://localhost:8080/api/users').subscribe((data: any) => {
+      this.usuarios = data;
+      console.log(this.usuarios);
+    });
+  }
+
   router = inject(Router);
   async onSubmit(event: Event) {
     event.preventDefault();
